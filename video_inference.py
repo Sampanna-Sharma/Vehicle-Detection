@@ -3,6 +3,13 @@ import numpy as np
 import torch
 from yolo import yolo
 from silency import Processimage
+import argparse
+ 
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-v", "--videopath", required=True,
+	help="path of video file")
+args = vars(ap.parse_args())
 
 model = torch.load("model.tar")
 
@@ -10,7 +17,7 @@ print("model loaded")
 
 IMAGEHEIGHT,IMAGEWIDTH = 128,128
 
-cap = cv2.VideoCapture("demo.MP4")
+cap = cv2.VideoCapture(args["videopath"])
 # loop over frames from the video file stream
 i = 0
 while True:
