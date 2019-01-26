@@ -1,13 +1,22 @@
 import time
 import cv2
 import numpy as np
-from resizeimage import Reformat_Image
+from utils.resizeimage import Reformat_Image
 
 IMAGEHEIGHT,IMAGEWIDTH = 128,128
 
 def Processimage(frame):
-	frameh = frame.shape[0]
-	framew = frame.shape[1]
+	''' Process the image and extracts the Reason Of Intrest(ROI)
+	
+	Parameters:
+		frame of the video input
+	
+	Results:
+		ROI: Region of interest
+		box: bounding box of ROI relative to frame(image) size.
+
+	'''
+	frameh, framew = frame.shape[0], frame.shape[1]
 	saliency = cv2.saliency.StaticSaliencyFineGrained_create()
 	#saliency = cv2.saliency.StaticSaliencySpectralResidual_create()
 	(success, saliencyMap) = saliency.computeSaliency(frame)
@@ -29,7 +38,6 @@ def Processimage(frame):
 	box = list()
 	for cnt in Contours:
 		x,y,w,h = cv2.boundingRect(cnt)
-
 		if(h*w<0.001*(frameh*framew) or h/w>3 or w/h>3 or h*w>0.12*(frameh*framew) ):
 			continue		
 		crop_img = frame[y:y+h, x:x+w].copy()
